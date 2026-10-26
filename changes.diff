@@ -1,0 +1,294 @@
+--- a/index.html
++++ b/index.html
+@@ -1140,6 +1140,123 @@
+       }
+     }
+     </style>
++    <!-- BEGIN: новые элементы масштаба и именованных сохранений -->
++    <style id="project-view-tools-styles">
++      .table-scale-controls {
++        display: inline-flex;
++        align-items: center;
++        gap: 3px;
++        flex-shrink: 0;
++      }
++      .table-scale-controls button {
++        padding: 8px;
++        min-width: 33px;
++        font-size: 12px;
++      }
++      .table-scale-percent {
++        min-width: 43px;
++        text-align: center;
++        font: 11px var(--mono);
++        color: var(--muted);
++      }
++      .named-projects-button { white-space: nowrap; }
++      .named-projects-dialog { width: min(580px, calc(100vw - 24px)); }
++      .named-projects-heading {
++        display: flex;
++        align-items: center;
++        justify-content: space-between;
++        gap: 12px;
++        padding: 18px 21px;
++        border-bottom: 1px solid var(--line);
++      }
++      .named-projects-heading h2 { font-size: 16px; margin: 0; }
++      .named-projects-list { padding: 5px 21px 15px; }
++      .named-project-row {
++        display: flex;
++        align-items: center;
++        justify-content: space-between;
++        flex-wrap: wrap;
++        gap: 10px;
++        padding: 14px 0;
++        border-bottom: 1px solid var(--line);
++      }
++      .named-project-row:last-child { border-bottom: 0; }
++      .named-project-info { flex: 1; min-width: 140px; overflow-wrap: anywhere; }
++      .named-project-info strong { display: block; font-size: 13px; }
++      .named-project-date { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
++      .named-project-actions { display: flex; gap: 6px; }
++      .named-projects-empty { padding: 15px 0; font-size: 12px; color: var(--muted); }
++
++      /* Только при масштабе, отличном от 100%. Размеры участвуют в обычном
++         потоке: нативный скролл и координаты поповеров остаются корректными. */
++      .table-scale-surface { font-size: calc(14px * var(--table-scale)); }
++      .table-scale-surface table { width: calc(100% * var(--table-scale)); }
++      .table-scale-surface th, .table-scale-surface td {
++        min-width: calc(112px * var(--table-scale));
++        height: calc(57px * var(--table-scale));
++        padding: 0 calc(12px * var(--table-scale));
++      }
++      .table-scale-surface thead th { height: calc(65px * var(--table-scale)); padding: 0; }
++      .table-scale-surface th.row-number, .table-scale-surface td.row-number {
++        min-width: calc(66px * var(--table-scale));
++        width: calc(66px * var(--table-scale));
++        padding: 0 calc(10px * var(--table-scale));
++        font-size: calc(11px * var(--table-scale));
++      }
++      .table-scale-surface td.row-number label { gap: calc(8px * var(--table-scale)); }
++      .table-scale-surface .row-number input {
++        width: calc(13px * var(--table-scale));
++        height: calc(13px * var(--table-scale));
++      }
++      .table-scale-surface .column-heading {
++        height: calc(64px * var(--table-scale));
++        padding: calc(11px * var(--table-scale)) calc(12px * var(--table-scale));
++        gap: calc(8px * var(--table-scale));
++      }
++      .table-scale-surface .column-name { font-size: calc(13px * var(--table-scale)); }
++      .table-scale-surface .column-meta {
++        font-size: calc(10px * var(--table-scale));
++        margin-top: calc(5px * var(--table-scale));
++      }
++      .table-scale-surface .column-mark {
++        font-size: calc(12px * var(--table-scale));
++        margin-top: calc(1px * var(--table-scale));
++      }
++      .table-scale-surface .cell-input {
++        min-width: calc(70px * var(--table-scale));
++        max-width: calc(190px * var(--table-scale));
++        padding: calc(7px * var(--table-scale)) 0;
++        border-radius: calc(5px * var(--table-scale));
++        font-size: calc(13px * var(--table-scale));
++      }
++      .table-scale-surface .cell-input:focus { padding-right: calc(5px * var(--table-scale)); }
++      .table-scale-surface .cell-output { font-size: calc(13px * var(--table-scale)); }
++      .table-scale-surface .cell-error { font-size: calc(11px * var(--table-scale)); }
++      .table-scale-surface .input-error {
++        font-size: calc(9px * var(--table-scale));
++        margin-top: calc(-5px * var(--table-scale));
++      }
++      .table-scale-surface .empty-cell {
++        padding: calc(45px * var(--table-scale)) calc(20px * var(--table-scale)) !important;
++        height: calc(220px * var(--table-scale));
++        font-size: calc(12px * var(--table-scale));
++      }
++      @media (min-width: 1500px) {
++        .table-scale-surface th, .table-scale-surface td { min-width: calc(115px * var(--table-scale)); }
++        .table-scale-surface th.row-number, .table-scale-surface td.row-number { min-width: calc(66px * var(--table-scale)); }
++      }
++      @media (max-width: 560px) {
++        .table-scale-surface th, .table-scale-surface td {
++          min-width: calc(108px * var(--table-scale));
++          height: calc(53px * var(--table-scale));
++        }
++        .table-scale-surface thead th { height: calc(65px * var(--table-scale)); }
++        .table-scale-surface th.row-number, .table-scale-surface td.row-number { min-width: calc(66px * var(--table-scale)); }
++        .table-scale-surface .cell-input, .table-scale-surface .cell-output { font-size: calc(12px * var(--table-scale)); }
++        .table-scale-surface .empty-cell { height: calc(220px * var(--table-scale)); }
++      }
++    </style>
++    <!-- END: новые элементы масштаба и именованных сохранений -->
+   </head>
+   <body>
+     <header class="app-header">
+@@ -1174,12 +1291,23 @@
+           </svg>
+           Загрузить
+         </button>
++        <!-- BEGIN: кнопки именованных сохранений -->
++        <button id="save-as-btn" class="named-projects-button" type="button">Сохранить как…</button>
++        <button id="open-named-btn" class="named-projects-button" type="button">Открыть…</button>
++        <!-- END: кнопки именованных сохранений -->
+         <button id="export-btn" class="primary" type="button" title="CSV всегда содержит округлённые значения для отчёта">
+           <svg viewBox="0 0 24 24">
+             <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>
+           </svg>
+           Экспорт CSV
+         </button>
++        <!-- BEGIN: управление масштабом таблицы -->
++        <div class="table-scale-controls" role="group" aria-label="Масштаб таблицы">
++          <button id="table-scale-minus-btn" type="button" aria-label="Уменьшить масштаб таблицы">A−</button>
++          <output id="table-scale-percent" class="table-scale-percent" aria-live="polite">100%</output>
++          <button id="table-scale-plus-btn" type="button" aria-label="Увеличить масштаб таблицы">A+</button>
++        </div>
++        <!-- END: управление масштабом таблицы -->
+         <details class="settings" id="settings">
+           <summary aria-label="Настройки CSV">
+             Настройки
+@@ -1525,6 +1653,15 @@
+         Отменить
+       </button>
+     </div>
++    <!-- BEGIN: список именованных сохранений -->
++    <dialog id="named-projects-dialog" class="named-projects-dialog" aria-labelledby="named-projects-title">
++      <div class="named-projects-heading">
++        <h2 id="named-projects-title">Сохранённые проекты</h2>
++        <button id="close-named-projects-btn" class="ghost icon" type="button" aria-label="Закрыть список сохранений">✕</button>
++      </div>
++      <div id="named-projects-list" class="named-projects-list"></div>
++    </dialog>
++    <!-- END: список именованных сохранений -->
+     <script>
+   "use strict";
+   // Единственный глобальный объект. Остальные имена изолированы замыканием.
+@@ -2367,6 +2504,127 @@
+     state.api = Object.freeze({ parseExpression, evaluateExpression, applyRounding, formatValue, buildDependencyGraph, calculateProject, aggregateValues, makeCSV, validateProject, validateVariableName, renameInExpression, createDemoProject, createEmptyProject });
+     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
+     else initialize();
++
++    // BEGIN: масштаб таблицы и именованные сохранения (отдельные дополнения)
++    // Новые настройки и слоты не входят в state и в формат проекта.
++    const tableScaleStorageKey = "physcalc_table_scale";
++    const namedProjectPrefix = "physcalc_saved_";
++    let tableScalePercent = 100;
++
++    function applyTableScale(percent, persist = true) {
++      tableScalePercent = Math.max(70, Math.min(200, Math.round(percent / 10) * 10));
++      const surface = $("table-scroll");
++      surface.classList.toggle("table-scale-surface", tableScalePercent !== 100);
++      if (tableScalePercent === 100) surface.style.removeProperty("--table-scale");
++      else surface.style.setProperty("--table-scale", String(tableScalePercent / 100));
++      $("table-scale-percent").textContent = `${tableScalePercent}%`;
++      $("table-scale-minus-btn").disabled = tableScalePercent === 70;
++      $("table-scale-plus-btn").disabled = tableScalePercent === 200;
++      if (persist) {
++        try { localStorage.setItem(tableScaleStorageKey, String(tableScalePercent)); }
++        catch (error) { showToast("Масштаб изменён, но браузер не разрешил сохранить его."); }
++      }
++    }
++
++    function restoreTableScale() {
++      let percent = 100;
++      try {
++        const saved = Number(localStorage.getItem(tableScaleStorageKey));
++        if (Number.isInteger(saved) && saved >= 70 && saved <= 200 && saved % 10 === 0) percent = saved;
++      } catch (error) { /* При недоступном хранилище остаётся 100%. */ }
++      applyTableScale(percent, false);
++    }
++
++    function saveNamedProject() {
++      const answer = window.prompt("Имя сохранения проекта:", state.project.title || "Новый проект");
++      if (answer === null) return;
++      const name = answer.trim();
++      if (!name) { showToast("Введите непустое имя сохранения."); return; }
++      flushChanges();
++      try {
++        let timestamp = Date.now();
++        // Два быстрых сохранения не должны перезаписать друг друга.
++        while (localStorage.getItem(namedProjectPrefix + timestamp) !== null) timestamp += 1;
++        const slot = { name, savedAt: new Date().toISOString(), project: cloneProject(state.project) };
++        localStorage.setItem(namedProjectPrefix + timestamp, JSON.stringify(slot));
++        showToast(`Проект «${name}» сохранён отдельным слотом.`);
++      } catch (error) { showToast(`Не удалось сохранить проект: ${error.message}`); }
++    }
++
++    function readNamedProjects() {
++      const slots = [];
++      for (let index = 0; index < localStorage.length; index += 1) {
++        const key = localStorage.key(index);
++        if (!key || !/^physcalc_saved_\d+$/.test(key)) continue;
++        try {
++          const slot = JSON.parse(localStorage.getItem(key));
++          if (!slot || typeof slot.name !== "string" || !slot.project) throw new Error("Неверный слот.");
++          const time = Date.parse(slot.savedAt);
++          slots.push({ key, name: slot.name, savedAt: slot.savedAt, time: Number.isFinite(time) ? time : 0, invalid: false });
++        } catch (error) {
++          // Повреждённый слот можно удалить, не затрагивая остальные проекты.
++          slots.push({ key, name: "Повреждённое сохранение", time: 0, invalid: true });
++        }
++      }
++      return slots.sort((first, second) => second.time - first.time || Number(second.key.slice(namedProjectPrefix.length)) - Number(first.key.slice(namedProjectPrefix.length)));
++    }
++
++    function renderNamedProjects() {
++      const slots = readNamedProjects();
++      $("named-projects-list").innerHTML = slots.length ? slots.map(slot => {
++        const date = slot.time ? new Date(slot.time).toLocaleString("ru-RU") : "Дата неизвестна";
++        return `<div class="named-project-row"><div class="named-project-info"><strong>${escapeHTML(slot.name)}</strong><span class="named-project-date">${escapeHTML(date)}</span></div><div class="named-project-actions"><button class="small" type="button" data-open-named="${slot.key}"${slot.invalid ? " disabled" : ""}>Открыть</button><button class="small danger" type="button" data-delete-named="${slot.key}">Удалить</button></div></div>`;
++      }).join("") : '<p class="named-projects-empty">Нет сохранённых проектов</p>';
++    }
++
++    function showNamedProjects() {
++      try {
++        renderNamedProjects();
++        $("named-projects-dialog").showModal();
++      } catch (error) { showToast(`Не удалось открыть список сохранений: ${error.message}`); }
++    }
++
++    function openNamedProject(key) {
++      try {
++        const text = localStorage.getItem(key);
++        if (text === null) { renderNamedProjects(); showToast("Это сохранение уже удалено."); return; }
++        const slot = JSON.parse(text);
++        const project = validateProject(slot.project);
++        replaceProject(project, `Открыт проект «${slot.name}».`);
++        $("named-projects-dialog").close();
++      } catch (error) { showToast(`Не удалось открыть проект: ${error.message}`); }
++    }
++
++    function deleteNamedProject(key) {
++      try {
++        let name = "Повреждённое сохранение";
++        try { name = JSON.parse(localStorage.getItem(key))?.name || name; }
++        catch (error) { /* Для повреждённого JSON остаётся поясняющее имя. */ }
++        if (!window.confirm(`Удалить сохранение «${name}»?`)) return;
++        localStorage.removeItem(key);
++        renderNamedProjects();
++        showToast("Именованное сохранение удалено.");
++      } catch (error) { showToast(`Не удалось удалить сохранение: ${error.message}`); }
++    }
++
++    function initializeProjectViewTools() {
++      restoreTableScale();
++      $("table-scale-minus-btn").addEventListener("click", () => applyTableScale(tableScalePercent - 10));
++      $("table-scale-plus-btn").addEventListener("click", () => applyTableScale(tableScalePercent + 10));
++      $("save-as-btn").addEventListener("click", saveNamedProject);
++      $("open-named-btn").addEventListener("click", showNamedProjects);
++      $("close-named-projects-btn").addEventListener("click", () => $("named-projects-dialog").close());
++      $("named-projects-list").addEventListener("click", event => {
++        const openButton = event.target.closest("[data-open-named]");
++        const deleteButton = event.target.closest("[data-delete-named]");
++        if (openButton) openNamedProject(openButton.dataset.openNamed);
++        else if (deleteButton) deleteNamedProject(deleteButton.dataset.deleteNamed);
++      });
++    }
++
++    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initializeProjectViewTools, { once: true });
++    else initializeProjectViewTools();
++    // END: масштаб таблицы и именованные сохранения (отдельные дополнения)
+   })();
+   
+     </script>
